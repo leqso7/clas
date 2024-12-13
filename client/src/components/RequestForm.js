@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../supabaseClient';
 
 const RequestForm = () => {
   const [formData, setFormData] = useState({
@@ -12,10 +12,19 @@ const RequestForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/submit-request', formData);
-      if (response.data.success) {
-        navigate('/pending');
-      }
+      const { data, error } = await supabase
+        .from('access_requests')
+        .insert([
+          { 
+            first_name: formData.firstName, 
+            last_name: formData.lastName, 
+            status: 'pending' 
+          }
+        ]);
+
+      if (error) throw error;
+      
+      navigate('/pending');
     } catch (error) {
       console.error('Error submitting request:', error);
     }
