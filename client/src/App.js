@@ -5,7 +5,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/clas">
       <div className="App">
         <Routes>
           <Route path="/" element={<RequestForm />} />
